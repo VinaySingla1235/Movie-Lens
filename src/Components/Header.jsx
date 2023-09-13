@@ -5,6 +5,7 @@ import useDarkSide from "./useDarkSide";
 import ourLogo from "../assets/magnifyingLens.png"
 import { useDispatch } from "react-redux";
 import { addCategory } from "../Features/categoryFilterReducer";
+import { addLanguage } from "../Features/languageFilterReducer";
 const Header = () => {
   const [colorTheme, setTheme] = useDarkSide();
   const toggleMode = (checked) => {
@@ -30,10 +31,32 @@ const Header = () => {
     { id: 10752, title: "War" },
     { id: 37, title: "Western" },
   ];
+  const languages = [
+    { code: 'en', title: 'English' },
+    { code: 'es', title: 'Spanish' },
+    { code: 'fr', title: 'French' },
+    { code: 'de', title: 'German' },
+    { code: 'it', title: 'Italian' },
+    { code: 'pt', title: 'Portuguese' },
+    { code: 'ja', title: 'Japanese' },
+    { code: 'ko', title: 'Korean' },
+    { code: 'zh', title: 'Chinese' },
+    { code: 'ru', title: 'Russian' },
+    { code: 'hi', title: 'Hindi' },
+    { code: 'ar', title: 'Arabic' },
+    { code: 'nl', title: 'Dutch' },
+  ];
   const dispatch=useDispatch();
   const addCategoryFunc=(e)=>{
     dispatch(addCategory(genres[e.target.value]));
     const btn=document.getElementById("categoryDropdownNavbarLink")
+    btn.click();
+    const btn2=document.getElementById("mobile-navbar-toggle");
+    btn2.click()
+  }
+  const addLanguageFunc=(e)=>{
+    dispatch(addLanguage(languages[e.target.value]));
+    const btn=document.getElementById("languageDropdownNavbarLink")
     btn.click();
     const btn2=document.getElementById("mobile-navbar-toggle");
     btn2.click()
@@ -110,7 +133,7 @@ const Header = () => {
               <li>
                 <button
                   id="categoryDropdownNavbarLink"
-                  data-dropdown-toggle="dropdownNavbar"
+                  data-dropdown-toggle="categoryDropdownNavbar"
                   className="flex items-center justify-between w-full py-2 pl-3 pr-4  text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
                 >
                   Categories
@@ -132,7 +155,7 @@ const Header = () => {
                 </button>
                 {/* <!-- Dropdown menu --> */}
                 <div
-                  id="dropdownNavbar"
+                  id="categoryDropdownNavbar"
                   className="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
                 >
                   <ul
@@ -157,6 +180,56 @@ const Header = () => {
               </li>
 
               {/* category dropdown ends */}
+              {/* langugae dropdown starts  */}
+              <li>
+                <button
+                  id="languageDropdownNavbarLink"
+                  data-dropdown-toggle="languageDropdownNavbar"
+                  className="flex items-center justify-between w-full py-2 pl-3 pr-4  text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+                >
+                  Languages
+                  <svg
+                    className="w-2.5 h-2.5 ml-2.5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                </button>
+                {/* <!-- Dropdown menu --> */}
+                <div
+                  id="languageDropdownNavbar"
+                  className="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                >
+                  <ul
+                    className="py-2 text-sm text-gray-700 dark:text-gray-400"
+                    aria-labelledby="dropdownLargeButton"
+                  >
+                    {languages.map((language,index)=>{
+                      return <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                      value={index}
+                      key={language.code}
+                      onClick={addLanguageFunc}
+                      >
+                      
+                        {language.title}
+                      
+                    </li>
+                    })}
+                    
+                    
+                  </ul>
+                </div>
+              </li>
+              {/* language dropdown ends  */}
             </ul>
           </div>
         </div>
