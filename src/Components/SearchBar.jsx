@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addSearch } from "../Features/searchMovieReducer";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 const SearchBar = () => {
     const navigate=useNavigate();
+    // console.log(navigate)
+    const location = useLocation();
     const [searchInput,setSearchInput]=useState("");
     const dispatch=useDispatch();
     const search=(e)=>{
@@ -12,6 +15,11 @@ const SearchBar = () => {
         navigate("/search")
         dispatch(addSearch(searchInput));
     }
+    useEffect(()=>{
+      if(location.pathname!="/search"){
+        setSearchInput("");
+      }
+    },[location.pathname])
   return (
     <div className="left-1/2 top-0 transform -translate-x-1/2 fixed mt-24">
       <form className="flex items-center w-80 md:w-[30rem] lg:w-[40rem] mx-auto">
