@@ -6,11 +6,13 @@ import ourLogo from "../assets/magnifyingLens.png"
 import { useDispatch } from "react-redux";
 import { addCategory } from "../Features/categoryFilterReducer";
 import { addLanguage } from "../Features/languageFilterReducer";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   const [colorTheme, setTheme] = useDarkSide();
   const toggleMode = (checked) => {
     setTheme(colorTheme);
   };
+  const navigate=useNavigate();
   const genres = [
     { id: 28, title: "Action" },
     { id: 12, title: "Adventure" },
@@ -53,6 +55,7 @@ const Header = () => {
     btn.click();
     const btn2=document.getElementById("mobile-navbar-toggle");
     btn2.click()
+    navigate("/");
   }
   const addLanguageFunc=(e)=>{
     dispatch(addLanguage(languages[e.target.value]));
@@ -60,6 +63,7 @@ const Header = () => {
     btn.click();
     const btn2=document.getElementById("mobile-navbar-toggle");
     btn2.click()
+    navigate("/");
   }
   return (
     <>

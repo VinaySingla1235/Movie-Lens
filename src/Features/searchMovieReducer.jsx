@@ -9,7 +9,9 @@ const searchMovieSlice=createSlice({
         addSearch:(state,action)=>{
             const movie={
                 id:nanoid(),
-                text:action.payload
+                text:action.payload,
+                prefix:"search/movie",
+                query:`query=${action.payload}`
             }
             state.searchMovie=movie
         }

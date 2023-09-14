@@ -3,9 +3,13 @@ import MovieCard from "./MovieCard";
 import { useSelector } from "react-redux";
 import Spinner from "./Spinnner";
 import Swal from 'sweetalert2'
+import { useLocation } from "react-router-dom";
 const MovieHome = () => {
+  const location=useLocation();
+  // console.log(location)
   const categoryFilter=useSelector((state)=>state.category.categoryFilter)
   const languageFilter=useSelector((state)=>state.language.languageFilter)
+  const searchMovie=useSelector((state)=>state.search.searchMovie)
   const [movies, setMovies] = useState([]);
   const [heading ,setHeading]=useState("");
   const [fetching,setFetching]=useState(false);
@@ -13,7 +17,15 @@ const MovieHome = () => {
     return Object.keys(obj).length === 0;
   }
   useEffect(() => {
-    if(!isObjectEmpty(languageFilter) && !isObjectEmpty(categoryFilter)){
+    // console.log(searchMovie);
+    if(!isObjectEmpty(searchMovie) && location.pathname==="/search"){
+      const url=`https://api.themoviedb.org/3/${searchMovie.prefix}?api_key=f154bc038a4617e7a34f71881d492271&${searchMovie.query}`
+      // console.log(url);
+      const heading2=searchMovie.text;
+      setFetching(true)
+      fetchSearch(url,heading2);
+    }
+    else if(!isObjectEmpty(languageFilter) && !isObjectEmpty(categoryFilter)){
       const url=`https://api.themoviedb.org/3/${languageFilter.languagePrefix}?api_key=f154bc038a4617e7a34f71881d492271&${languageFilter.language}&${categoryFilter.genre}`
       const heading2=`${languageFilter.languageTitle} ${categoryFilter.genreTitle} movies`
       setFetching(true)
@@ -37,7 +49,36 @@ const MovieHome = () => {
       setFetching(true)
       fetchPopular();
     }
-  }, [categoryFilter,languageFilter]);
+  }, [categoryFilter,languageFilter,searchMovie]);
+  const fetchSearch=async(url,heading2)=>{
+    try {
+      const data = await fetch(url);
+      if (!data.ok) {
+        throw new Error(`Network response was not ok (status ${data.status})`);
+      }
+  
+      const moviesF = await data.json();
+      if(moviesF.results.length==0){
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `No results found for ${heading2} please check the spelling and try again`,
+        })
+      }
+      setMovies(moviesF.results);
+      setHeading(heading2)
+      setFetching(false);
+    } catch (error) {
+      // console.error("Error fetching data:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Unable to load ${heading2}`,
+      })
+      
+      fetchPopular()
+    }
+  }
   const fetchFilter=async(url,heading2)=>{
     try {
       const data = await fetch(url);

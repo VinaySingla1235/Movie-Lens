@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addSearch } from "../Features/searchMovieReducer";
+import { useNavigate } from "react-router-dom";
 const SearchBar = () => {
+    const navigate=useNavigate();
     const [searchInput,setSearchInput]=useState("");
     const dispatch=useDispatch();
     const search=(e)=>{
         e.preventDefault();
         // console.log(searchInput);
+        navigate("/search")
         dispatch(addSearch(searchInput));
     }
   return (
