@@ -3,7 +3,7 @@ import { genres, languages } from "../Data/filterId";
 const MovieDetails = ({ isModalOpen, toggleModal, movie }) => {
   if (!isModalOpen) return null;
   // // console.log("movieDetails re rendered")
-  const youtubeApiKey='AIzaSyCoRhITpE213c6JpOFzwcoHSuwQRqeCpJw'
+  const youtubeApiKey='AIzaSyDIR_5U-XVoul8-Hj0mf2bs5tpM29LwO2s'
   const [language,setLanguage]=useState("");
   
   const validGenres = genres.filter((genre) =>
@@ -102,7 +102,7 @@ const MovieDetails = ({ isModalOpen, toggleModal, movie }) => {
               </div>
               <div className="categories flex justify-start space-x-3 my-1">
                 {validGenres.map((genre,index)=>{
-                  return <div className="bg-green-400 text-white w-fit px-3 py-3 rounded-xl" key={index}>{genre.title}</div>
+                  return <div className="bg-green-400 text-white w-fit px-2 py-1 rounded-xl" key={index}>{genre.title}</div>
                 })}
                 
               </div>

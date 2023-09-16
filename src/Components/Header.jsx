@@ -4,50 +4,17 @@ import sun from "../assets/white-sun.svg";
 import useDarkSide from "./useDarkSide";
 import ourLogo from "../assets/magnifyingLens.png"
 import { useDispatch } from "react-redux";
-import { addCategory } from "../Features/categoryFilterReducer";
-import { addLanguage } from "../Features/languageFilterReducer";
+import { addCategory,clearCategory } from "../Features/categoryFilterReducer";
+import { addLanguage,clearLanguage } from "../Features/languageFilterReducer";
 import { useNavigate } from "react-router-dom";
+import { genres,languages } from "../Data/filterId";
+// import { auth } from "../firebase";
 const Header = () => {
   const [colorTheme, setTheme] = useDarkSide();
   const toggleMode = (checked) => {
     setTheme(colorTheme);
   };
   const navigate=useNavigate();
-  const genres = [
-    { id: 28, title: "Action" },
-    { id: 12, title: "Adventure" },
-    { id: 16, title: "Animation" },
-    { id: 35, title: "Comedy" },
-    { id: 80, title: "Crime" },
-    { id: 99, title: "Documentary" },
-    { id: 18, title: "Drama" },
-    { id: 10751, title: "Family" },
-    { id: 14, title: "Fantasy" },
-    { id: 36, title: "History" },
-    { id: 27, title: "Horror" },
-    { id: 10402, title: "Music" },
-    { id: 9648, title: "Mystery" },
-    { id: 10749, title: "Romance" },
-    { id: 878, title: "Science Fiction" },
-    { id: 53, title: "Thriller" },
-    { id: 10752, title: "War" },
-    { id: 37, title: "Western" },
-  ];
-  const languages = [
-    { code: 'en', title: 'English' },
-    { code: 'es', title: 'Spanish' },
-    { code: 'fr', title: 'French' },
-    { code: 'de', title: 'German' },
-    { code: 'it', title: 'Italian' },
-    { code: 'pt', title: 'Portuguese' },
-    { code: 'ja', title: 'Japanese' },
-    { code: 'ko', title: 'Korean' },
-    { code: 'zh', title: 'Chinese' },
-    { code: 'ru', title: 'Russian' },
-    { code: 'hi', title: 'Hindi' },
-    { code: 'ar', title: 'Arabic' },
-    { code: 'nl', title: 'Dutch' },
-  ];
   const dispatch=useDispatch();
   const addCategoryFunc=(e)=>{
     dispatch(addCategory(genres[e.target.value]));
@@ -63,6 +30,11 @@ const Header = () => {
     btn.click();
     const btn2=document.getElementById("mobile-navbar-toggle");
     btn2.click()
+    navigate("/");
+  }
+  const popular=()=>{
+    dispatch(clearCategory());
+    dispatch(clearLanguage());
     navigate("/");
   }
   return (
@@ -129,8 +101,9 @@ const Header = () => {
                   href="#"
                   className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
                   aria-current="page"
+                  onClick={popular}
                 >
-                  Home
+                  Popular Worldwide
                 </a>
               </li>
               {/* category dropdown starts */}
@@ -191,7 +164,7 @@ const Header = () => {
                   data-dropdown-toggle="languageDropdownNavbar"
                   className="flex items-center justify-between w-full py-2 pl-3 pr-4  text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
                 >
-                  Languages
+                  Original Language
                   <svg
                     className="w-2.5 h-2.5 ml-2.5"
                     aria-hidden="true"

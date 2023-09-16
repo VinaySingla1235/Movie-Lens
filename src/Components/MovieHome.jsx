@@ -102,7 +102,7 @@ const MovieHome = () => {
     }
   }
   const fetchPopular=async()=>{
-    const url="https://api.themoviedb.org/3/movie/popular?api_key=f154bc038a4617e7a34f71881d492271&language=en-US"
+    const url="https://api.themoviedb.org/3/movie/popular?api_key=f154bc038a4617e7a34f71881d492271"
     try {
       const data = await fetch(url);
       if (!data.ok) {

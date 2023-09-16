@@ -14,11 +14,14 @@ const categoryFilterSlice=createSlice({
                 genreTitle:action.payload.title,
                 genrePrefix:'discover/movie'
             }
-            state.categoryFilter=category
+            state.categoryFilter=category 
+        },
+        clearCategory:(state)=>{
+            state.categoryFilter={}
         }
     }
 })
 // export const {addTodo,removeTodo}=todoSlice.actions
 // export default todoSlice.reducer
-export const {addCategory} =categoryFilterSlice.actions
+export const {addCategory,clearCategory} =categoryFilterSlice.actions
 export default categoryFilterSlice.reducer

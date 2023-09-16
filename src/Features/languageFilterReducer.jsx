@@ -15,10 +15,13 @@ const languageFilterSlice=createSlice({
                 languagePrefix:'discover/movie'
             }
             state.languageFilter=language
+        },
+        clearLanguage:(state)=>{
+            state.languageFilter={}
         }
     }
 })
 // export const {addTodo,removeTodo}=todoSlice.actions
 // export default todoSlice.reducer
-export const {addLanguage} =languageFilterSlice.actions
+export const {addLanguage,clearLanguage} =languageFilterSlice.actions
 export default languageFilterSlice.reducer
