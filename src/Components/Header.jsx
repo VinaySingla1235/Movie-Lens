@@ -2,56 +2,75 @@ import React, { useEffect, useState } from "react";
 import moon from "../assets/moon-solid.svg";
 import sun from "../assets/white-sun.svg";
 import useDarkSide from "./useDarkSide";
-import ourLogo from "../assets/magnifyingLens.png"
+import ourLogo from "../assets/magnifyingLens.png";
 import { useDispatch } from "react-redux";
-import { addCategory,clearCategory } from "../Features/categoryFilterReducer";
-import { addLanguage,clearLanguage } from "../Features/languageFilterReducer";
+import { addCategory, clearCategory } from "../Features/categoryFilterReducer";
+import { addLanguage, clearLanguage } from "../Features/languageFilterReducer";
 import { useNavigate } from "react-router-dom";
-import { genres,languages } from "../Data/filterId";
+import { genres, languages } from "../Data/filterId";
+import { Link } from "react-router-dom";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 // import { auth } from "../firebase";
-const Header = () => {
+const Header = ({ currentUser }) => {
+  const [currentUserState,setCurrentUser]=useState(currentUser)
+  const logOut = async () => {
+    console.log("log out is clicked")
+    try {
+      await signOut(auth);
+      console.log("Signed out")
+      setCurrentUser(null);
+      toast.success("User logged out")
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  useEffect(()=>{
+    setCurrentUser(currentUser);
+  },[currentUser])
   const [colorTheme, setTheme] = useDarkSide();
   const toggleMode = (checked) => {
     setTheme(colorTheme);
   };
-  const navigate=useNavigate();
-  const dispatch=useDispatch();
-  const addCategoryFunc=(e)=>{
+  console.log(currentUser);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const addCategoryFunc = (e) => {
     dispatch(addCategory(genres[e.target.value]));
-    const btn=document.getElementById("categoryDropdownNavbarLink")
+    const btn = document.getElementById("categoryDropdownNavbarLink");
     btn.click();
-    const btn2=document.getElementById("mobile-navbar-toggle");
-    btn2.click()
+    const btn2 = document.getElementById("mobile-navbar-toggle");
+    btn2.click();
     navigate("/");
-  }
-  const addLanguageFunc=(e)=>{
+  };
+  const addLanguageFunc = (e) => {
     dispatch(addLanguage(languages[e.target.value]));
-    const btn=document.getElementById("languageDropdownNavbarLink")
+    const btn = document.getElementById("languageDropdownNavbarLink");
     btn.click();
-    const btn2=document.getElementById("mobile-navbar-toggle");
-    btn2.click()
+    const btn2 = document.getElementById("mobile-navbar-toggle");
+    btn2.click();
     navigate("/");
-  }
-  const popular=()=>{
+  };
+  const popular = () => {
     dispatch(clearCategory());
     dispatch(clearLanguage());
     navigate("/");
-  }
+  };
   return (
     <>
       <nav className="bg-gray-100 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+        <ToastContainer theme="colored"/>
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="#" className="flex items-center">
-            <img
-              src={ourLogo}
-              className="h-8 mr-3"
-              alt="Flowbite Logo"
-            />
+            <img src={ourLogo} className="h-8 mr-3" alt="Flowbite Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Movie Lens
             </span>
           </a>
-          <div className="flex md:order-2">
+          <div className="flex md:order-2 space-x-3">
             <button onClick={toggleMode}>
               <img
                 className={`h-6 w-6 ${colorTheme === "light" ? "hidden" : ""}`}
@@ -64,6 +83,30 @@ const Header = () => {
                 alt=""
               />
             </button>
+            {(currentUserState===null) ? (
+              <>
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  <Link to="/SignIn">Log In</Link>
+                </button>
+                <button
+                  type="button"
+                  className="text-white hidden lg:block bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  <Link to="/SignUp">Register</Link>
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                onClick={logOut}
+              >
+                Log Out
+              </button>
+            )}
 
             <button
               data-collapse-toggle="navbar-sticky"
@@ -139,19 +182,18 @@ const Header = () => {
                     className="py-2 text-sm text-gray-700 dark:text-gray-400"
                     aria-labelledby="dropdownLargeButton"
                   >
-                    {genres.map((genre,index)=>{
-                      return <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-                      value={index}
-                      key={genre.id}
-                      onClick={addCategoryFunc}
-                      >
-                      
-                        {genre.title}
-                      
-                    </li>
+                    {genres.map((genre, index) => {
+                      return (
+                        <li
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                          value={index}
+                          key={genre.id}
+                          onClick={addCategoryFunc}
+                        >
+                          {genre.title}
+                        </li>
+                      );
                     })}
-                    
-                    
                   </ul>
                 </div>
               </li>
@@ -190,19 +232,18 @@ const Header = () => {
                     className="py-2 text-sm text-gray-700 dark:text-gray-400"
                     aria-labelledby="dropdownLargeButton"
                   >
-                    {languages.map((language,index)=>{
-                      return <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-                      value={index}
-                      key={language.code}
-                      onClick={addLanguageFunc}
-                      >
-                      
-                        {language.title}
-                      
-                    </li>
+                    {languages.map((language, index) => {
+                      return (
+                        <li
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                          value={index}
+                          key={language.code}
+                          onClick={addLanguageFunc}
+                        >
+                          {language.title}
+                        </li>
+                      );
                     })}
-                    
-                    
                   </ul>
                 </div>
               </li>

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 // import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
-import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
+import { auth,provider } from "../firebase";
+import { signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { setPersistence,browserLocalPersistence } from "firebase/auth";
+
 const SignIn = () => {
     const [userCredentials,setUserCredentials]=useState({
         email:"",
@@ -45,7 +45,31 @@ const SignIn = () => {
             setSubmitDisabled(false)
         }
     }
-    
+    const singUpGoogle = () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          // IdP data available using getAdditionalUserInfo(result)
+          // console.log(user)
+          navigate("/");
+          // ...
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          toast.error(error.message);
+          // ...
+    });
+    }
   return (
     <div className="flex mt-32 justify-center items-center px-5">
         <ToastContainer theme="colored" />
@@ -58,6 +82,7 @@ const SignIn = () => {
             <button
               type="button"
               className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
+              onClick={singUpGoogle}
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -82,7 +107,7 @@ const SignIn = () => {
           </div>
           <div>
             <label
-              for="email"
+              htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Your email
@@ -100,7 +125,7 @@ const SignIn = () => {
           </div>
           <div>
             <label
-              for="password"
+              htmlFor="password"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Your password
@@ -117,12 +142,12 @@ const SignIn = () => {
             />
           </div>
           <div className="">
-            <a
-              href="#"
+            <Link
+              to="/SignIn/ForgotPassword"
               className="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
           <button
             type="submit"

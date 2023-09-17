@@ -8,6 +8,7 @@ import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
 import { auth } from "./firebase";
 import { onAuthStateChanged,signOut } from "firebase/auth";
+import ForgotPassword from "./Components/ForgotPassword";
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const logOut=async ()=>{
@@ -39,11 +40,13 @@ function App() {
       // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
       console.log("user is logged in");
-      console.log(user);
+      // console.log(user);
       const authMethod=getAuthMethod(user);
       if(authMethod==="password" && !user.emailVerified){
         logOut();
+        return;
       }
+      setCurrentUser(user);
     } else {
       // User is signed out
       // ...
@@ -76,6 +79,7 @@ function App() {
           />
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />
+          <Route path="/SignIn/ForgotPassword" element={<ForgotPassword />} />
         </Routes>
       </div>
     </BrowserRouter>
