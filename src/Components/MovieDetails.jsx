@@ -1,41 +1,84 @@
 import React, { useEffect, useState } from "react";
 import { genres, languages } from "../Data/filterId";
-const MovieDetails = ({ isModalOpen, toggleModal, movie }) => {
+import { Tooltip } from "react-tooltip";
+import "boxicons";
+const MovieDetails = ({
+  isModalOpen,
+  toggleModal,
+  movie,
+  favoriteMovies,
+  watchlistMovies,
+  addToFavorites,
+  addToWatchlist,
+  RemoveFromFavourites,
+  removeFromWatchlist,
+}) => {
   if (!isModalOpen) return null;
   // // console.log("movieDetails re rendered")
-  const youtubeApiKey='AIzaSyDIR_5U-XVoul8-Hj0mf2bs5tpM29LwO2s'
-  const [language,setLanguage]=useState("");
-  
+  const youtubeApiKey =import.meta.env.VITE_YOUTUBE_API_KEY
+  // console.log(youtubeApiKey)
+  const [language, setLanguage] = useState("");
+
   const validGenres = genres.filter((genre) =>
     movie.genre_ids.includes(genre.id)
   );
-  const [videoId,setvideoId]=useState(null);
-  const fetchTrailer=async()=>{
+  const [videoId, setvideoId] = useState(null);
+  const fetchTrailer = async () => {
     try {
-      const response=await fetch(`https://www.googleapis.com/youtube/v3/search?key=${youtubeApiKey}&q=${movie.title}+trailer`)
-      const data=await response.json();
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?key=${youtubeApiKey}&q=${movie.title}+trailer`
+      );
+      const data = await response.json();
       // console.log(data)
       const videoID = data.items[0].id.videoId;
-      if(videoID){
+      if (videoID) {
         setvideoId(videoID);
       }
     } catch (error) {
       // console.log(error)
     }
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     const foundLanguage = languages.filter(
       (language) => language.code === movie.original_language
     );
-    if(foundLanguage.length>0){
-      setLanguage(foundLanguage[0].title)
+    if (foundLanguage.length > 0) {
+      setLanguage(foundLanguage[0].title);
     }
     // console.log("use Effect is called");
-    if(videoId===null){
+    if (videoId === null) {
       // console.log("fetching trailer");
       fetchTrailer();
     }
-  },[])
+  }, []);
+
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isWatchlist, setIsWatchlist] = useState(false);
+  useEffect(() => {
+    const favorite = favoriteMovies.find((favMovie) => {
+      return movie.id === favMovie.id;
+    });
+    setIsFavorite(favorite);
+    const watchlist = watchlistMovies.find((watchMovie) => {
+      return movie.id === watchMovie.id;
+    });
+    setIsWatchlist(watchlist);
+  }, [favoriteMovies, watchlistMovies]);
+
+  const handleFavClick = () => {
+    if (isFavorite) {
+      RemoveFromFavourites(movie);
+    } else {
+      addToFavorites(movie);
+    }
+  };
+  const handleWatchClick = () => {
+    if (isWatchlist) {
+      removeFromWatchlist(movie);
+    } else {
+      addToWatchlist(movie);
+    }
+  };
   return (
     <div
       id="defaultModal"
@@ -52,9 +95,75 @@ const MovieDetails = ({ isModalOpen, toggleModal, movie }) => {
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           {/* <!-- Modal header --> */}
           <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {movie.title}
-            </h3>
+            <div className="flex space-x-2 items-center">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {movie.title}
+              </h3>
+              <div className="icons-container flex space-x-2">
+                <Tooltip id="my-tooltip" />
+                {/* add to favourite icon container starts here */}
+                <div className="fav-icon-container" onClick={handleFavClick}>
+                  <div
+                    className="light dark:hidden"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={
+                      isFavorite
+                        ? "Remove from favourites"
+                        : "Add to favourites"
+                    }
+                  >
+                    <box-icon
+                      name="star"
+                      type={isFavorite ? "solid" : "regular"}
+                    ></box-icon>
+                  </div>
+                  <div
+                    className="dark hidden dark:block"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={
+                      isFavorite
+                        ? "Remove from favourites"
+                        : "Add to favourites"
+                    }
+                  >
+                    <box-icon
+                      name="star"
+                      type={isFavorite ? "solid" : "regular"}
+                      color="#FFFFFF"
+                    ></box-icon>
+                  </div>
+                </div>
+                {/* Add to watchlist icon starts here  */}
+                <div
+                  className="watchlist-icon-container"
+                  onClick={handleWatchClick}
+                >
+                  <div
+                    className="light dark:hidden"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={
+                      isWatchlist ? "Remove from watchlist" : "Add to watchlist"
+                    }
+                  >
+                    <box-icon
+                      name={isWatchlist ? "list-check" : "list-plus"}
+                    ></box-icon>
+                  </div>
+                  <div
+                    className="dark hidden dark:block"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={
+                      isWatchlist ? "Remove from watchlist" : "Add to watchlist"
+                    }
+                  >
+                    <box-icon
+                      name={isWatchlist ? "list-check" : "list-plus"}
+                      color="#FFFFFF"
+                    ></box-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -86,7 +195,12 @@ const MovieDetails = ({ isModalOpen, toggleModal, movie }) => {
                 src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                 alt=""
               /> */}
-              <iframe width="560" height="315" src={`https://www.youtube.com/embed/${videoId}`} allowFullScreen></iframe>
+              <iframe
+                width="560"
+                height="315"
+                src={`https://www.youtube.com/embed/${videoId}`}
+                allowFullScreen
+              ></iframe>
             </div>
             <div className="">
               <p className="text-lg">{movie.overview}</p>
@@ -101,10 +215,16 @@ const MovieDetails = ({ isModalOpen, toggleModal, movie }) => {
                 </p>
               </div>
               <div className="categories flex justify-start space-x-3 my-1">
-                {validGenres.map((genre,index)=>{
-                  return <div className="bg-green-400 text-white w-fit px-2 py-1 rounded-xl" key={index}>{genre.title}</div>
+                {validGenres.map((genre, index) => {
+                  return (
+                    <div
+                      className="bg-green-400 text-white w-fit px-2 py-1 rounded-xl"
+                      key={index}
+                    >
+                      {genre.title}
+                    </div>
+                  );
                 })}
-                
               </div>
             </div>
           </div>

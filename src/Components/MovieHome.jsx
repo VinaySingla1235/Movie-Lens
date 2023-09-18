@@ -7,44 +7,44 @@ import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 import { db } from "../firebase";
-import { collection,doc,setDoc,getDoc,addDoc, updateDoc,FieldValue,arrayUnion,arrayRemove} from "firebase/firestore";
+import { doc,setDoc,getDoc, updateDoc,deleteField} from "firebase/firestore";
 const MovieHome = ({currentUser}) => {
   const location=useLocation();
-  // console.log(location)
+  // // console.log(location)
   const categoryFilter=useSelector((state)=>state.category.categoryFilter)
   const languageFilter=useSelector((state)=>state.language.languageFilter)
   const searchMovie=useSelector((state)=>state.search.searchMovie)
   const [movies, setMovies] = useState([]);
   const [heading ,setHeading]=useState("");
   const [fetching,setFetching]=useState(false);
-
+  const tmdb_api_key=import.meta.env.VITE_TMDB_API_KEY
   const isObjectEmpty=(obj)=> {
     return Object.keys(obj).length === 0;
   }
   useEffect(() => {
-    // console.log(searchMovie);
+    // // console.log(searchMovie);
     if(!isObjectEmpty(searchMovie) && location.pathname==="/search"){
-      const url=`https://api.themoviedb.org/3/${searchMovie.prefix}?api_key=f154bc038a4617e7a34f71881d492271&${searchMovie.query}`
-      // console.log(url);
+      const url=`https://api.themoviedb.org/3/${searchMovie.prefix}?api_key=${tmdb_api_key}&${searchMovie.query}`
+      // // console.log(url);
       const heading2=searchMovie.text;
       setFetching(true)
       fetchSearch(url,heading2);
     }
     else if(!isObjectEmpty(languageFilter) && !isObjectEmpty(categoryFilter)){
-      const url=`https://api.themoviedb.org/3/${languageFilter.languagePrefix}?api_key=f154bc038a4617e7a34f71881d492271&${languageFilter.language}&${categoryFilter.genre}`
+      const url=`https://api.themoviedb.org/3/${languageFilter.languagePrefix}?api_key=${tmdb_api_key}&${languageFilter.language}&${categoryFilter.genre}`
       const heading2=`${languageFilter.languageTitle} ${categoryFilter.genreTitle} movies`
       setFetching(true)
       fetchFilter(url,heading2)
     }
     else if(!isObjectEmpty(languageFilter)){
-      const url=`https://api.themoviedb.org/3/${languageFilter.languagePrefix}?api_key=f154bc038a4617e7a34f71881d492271&${languageFilter.language}`
+      const url=`https://api.themoviedb.org/3/${languageFilter.languagePrefix}?api_key=${tmdb_api_key}&${languageFilter.language}`
       const heading2=`${languageFilter.languageTitle} movies`
       setFetching(true)
       fetchFilter(url,heading2)
     }
     else if(!isObjectEmpty(categoryFilter)){
-      // console.log(categoryFilter);
-      const url=`https://api.themoviedb.org/3/${categoryFilter.genrePrefix}?api_key=f154bc038a4617e7a34f71881d492271&${categoryFilter.genre}`
+      // // console.log(categoryFilter);
+      const url=`https://api.themoviedb.org/3/${categoryFilter.genrePrefix}?api_key=${tmdb_api_key}&${categoryFilter.genre}`
       const heading2=`${categoryFilter.genreTitle} movies`
       setFetching(true)
       fetchFilter(url,heading2)
@@ -74,7 +74,7 @@ const MovieHome = ({currentUser}) => {
       setHeading(heading2)
       setFetching(false);
     } catch (error) {
-      // console.error("Error fetching data:", error);
+      // toast.error("Error fetching data:", error);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -98,7 +98,7 @@ const MovieHome = ({currentUser}) => {
       setHeading(heading2)
       setFetching(false);
     } catch (error) {
-      // console.error("Error fetching data:", error);
+      // toast.error("Error fetching data:", error);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -109,7 +109,7 @@ const MovieHome = ({currentUser}) => {
     }
   }
   const fetchPopular=async()=>{
-    const url="https://api.themoviedb.org/3/movie/popular?api_key=f154bc038a4617e7a34f71881d492271"
+    const url=`https://api.themoviedb.org/3/movie/popular?api_key=${tmdb_api_key}`
     try {
       const data = await fetch(url);
       if (!data.ok) {
@@ -121,7 +121,7 @@ const MovieHome = ({currentUser}) => {
       setHeading("Popular movies")
       setFetching(false);
     } catch (error) {
-      // console.error("Error fetching data:", error);
+      // toast.error("Error fetching data:", error);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -129,14 +129,10 @@ const MovieHome = ({currentUser}) => {
       })
     }
   }
-
+  // showing favourites and watchlist
+  
 
   // database manipultion
-  const movieToAdd = {
-    id: 123456789101111100,
-    title: "Movie Title new one new one new one new one",
-    // Other movie properties
-  };
 
   const [favoriteMovies,setFavouriteMovies]=useState([]);
   const [watchlistMovies,setWatchListMovies]=useState([]);
@@ -155,21 +151,25 @@ const MovieHome = ({currentUser}) => {
   const getFavMovies=async()=>{
     try {
       const docRef=doc(db,"favorites",currentUser.uid);
-      console.log(docRef);
+      // console.log(docRef);
       const docSnapshot = await getDoc(docRef); 
       if (docSnapshot.exists()) {
-        // console.log(docSnapshot.data().movies);
-        setFavouriteMovies(docSnapshot.data().movies)
+        // // console.log(docSnapshot.data().movies);
+        // setFavouriteMovies(docSnapshot.data().movies)
+        const data=docSnapshot.data();
+        const favArray=Object.values(data);
+        setFavouriteMovies(favArray);
+        // console.log(favArray)
       } else {
-        // console.log("Document does not exist.");
-        await setDoc(docRef,{
-          movies:[]
-        })
+        // // console.log("Document does not exist.");
+        // await setDoc(docRef,{
+        //   movies:[]
+        // })
       }
 
     } catch (error) {
       alert(error.message)
-      console.log(error)
+      // console.log(error)
     }
   }
   const addToFavorites = async (movie) => {
@@ -178,31 +178,32 @@ const MovieHome = ({currentUser}) => {
       return;
     }
     try {
-      console.log("Adding to favourites")
+      // console.log("Adding to favourites")
       const favRef=doc(db,"favorites",currentUser.uid);
-      console.log(favRef);
-      await updateDoc(favRef, {
-        movies:arrayUnion(movie)
-      });
+      // console.log(favRef);
+      // await updateDoc(favRef, {
+      //   movies:arrayUnion(movie)
+      // });
+      await setDoc(favRef,{[movie.id]:movie},{merge:true});
       const updatedFavoriteMovies = favoriteMovies.concat(movie);
       setFavouriteMovies(updatedFavoriteMovies)
     } catch (error) {
-      console.error("Error adding movie to favorites:", error);
+      toast.error("Error adding movie to favorites:", error);
     }
   };
   const RemoveFromFavourites = async (movie) => {
     try {
 
-      console.log("Adding to favourites")
+      // console.log("Adding to favourites")
       const favRef=doc(db,"favorites",currentUser.uid);
-      console.log(favRef);
+      // console.log(favRef);
       await updateDoc(favRef, {
-        movies:arrayRemove(movie)
+        [movie.id]:deleteField()
       });
       const updatedFavoriteMovies=favoriteMovies.filter((favMovie)=>favMovie.id!==movie.id);
       setFavouriteMovies(updatedFavoriteMovies);
     } catch (error) {
-      console.error("Error adding movie to favorites:", error);
+      toast.error("Error adding movie to favorites:", error);
     }
   };
   
@@ -210,21 +211,25 @@ const MovieHome = ({currentUser}) => {
   const getWatchlistMovies=async()=>{
     try {
       const docRef=doc(db,"watchlist",currentUser.uid);
-      console.log(docRef);
+      // console.log(docRef);
       const docSnapshot = await getDoc(docRef); 
       if (docSnapshot.exists()) {
-        // console.log(docSnapshot.data().movies);
-        setWatchListMovies(docSnapshot.data().movies)
+        // // console.log(docSnapshot.data().movies);
+        // setWatchListMovies(docSnapshot.data().movies)
+        const data=docSnapshot.data();
+        const watchArray=Object.values(data);
+        setWatchListMovies(watchArray);
+        // console.log(watchArray)
       } else {
-        // console.log("Document does not exist.");
-        await setDoc(docRef,{
-          movies:[]
-        })
+        // // console.log("Document does not exist.");
+        // await setDoc(docRef,{
+        //   movies:[]
+        // })
       }
 
     } catch (error) {
       alert(error.message)
-      console.log(error)
+      // console.log(error)
     }
   }
   const addToWatchlist = async (movie) => {
@@ -233,36 +238,52 @@ const MovieHome = ({currentUser}) => {
       return;
     }
     try {
-      console.log("Adding to favourites")
-      const favRef=doc(db,"watchlist",currentUser.uid);
-      console.log(favRef);
-      await updateDoc(favRef, {
-        movies:arrayUnion(movie)
-      });
+      // console.log("Adding to favourites")
+      const watchRef=doc(db,"watchlist",currentUser.uid);
+      // console.log(watchRef);
+      // await updateDoc(favRef, {
+      //   movies:arrayUnion(movie)
+      // });
+      await setDoc(watchRef,{[movie.id]:movie},{merge:true});
       const updatedWatchlistMovies = watchlistMovies.concat(movie);
       setWatchListMovies(updatedWatchlistMovies);
     } catch (error) {
-      console.error("Error adding movie to favorites:", error);
+      toast.error("Error adding movie to favorites:", error);
     }
   };
   const removeFromWatchlist = async (movie) => {
     try {
-      console.log("Adding to favourites")
+      // console.log("Adding to favourites")
       const favRef=doc(db,"watchlist",currentUser.uid);
-      console.log(favRef);
+      // console.log(favRef);
       await updateDoc(favRef, {
-        movies:arrayRemove(movie)
+        [movie.id]:deleteField()
       });
       const updatedWatchlistMovies=watchlistMovies.filter((favMovie)=>favMovie.id!==movie.id);
       setWatchListMovies(updatedWatchlistMovies);
     } catch (error) {
-      console.error("Error adding movie to favorites:", error);
+      toast.error("Error adding movie to favorites:", error);
     }
   };
-
+  useEffect(()=>{
+    if(currentUser!==null){
+      // console.log("useEffect path is called")
+      if(location.pathname==='/favourites'){
+        // console.log("Location is favourite")
+        setMovies(favoriteMovies);
+        // console.log(movies)
+        setHeading("Your Favourite Movies");
+      }
+      if(location.pathname==='/watchlist'){
+        console.log("location is watchlist")
+        setMovies(watchlistMovies);
+        setHeading('Watchlist Movies');
+      }
+    }
+  },[location,favoriteMovies,watchlistMovies])
   return (
     <><ToastContainer theme="colored"/> { fetching?<Spinner/> :
-      <div className="mt-40 dark:text-white flex flex-col items-center">
+      <div className={`${location.pathname==='/favourites' || location.pathname==='/watchlist'?'mt-24':'mt-40'} dark:text-white flex flex-col items-center`}>
         <div>
         <h1 className="text-4xl md:text-6xl text-black font-bold dark:text-white ">
           {heading}

@@ -10,7 +10,7 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBNsg9O3TdivFL-Wme2PHAXmyabvJbwQsM",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "movie-lens-ff468.firebaseapp.com",
   projectId: "movie-lens-ff468",
   storageBucket: "movie-lens-ff468.appspot.com",

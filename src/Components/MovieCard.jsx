@@ -32,6 +32,7 @@ const MovieCard = ({
     });
     setIsWatchlist(watchlist);
   }, [favoriteMovies, watchlistMovies]);
+
   const handleFavClick = () => {
     if (isFavorite) {
       RemoveFromFavourites(movie);
@@ -39,14 +40,13 @@ const MovieCard = ({
       addToFavorites(movie);
     }
   };
-  const handleWatchClick=()=>{
-    if(isWatchlist){
+  const handleWatchClick = () => {
+    if (isWatchlist) {
       removeFromWatchlist(movie);
-    }
-    else{
+    } else {
       addToWatchlist(movie);
     }
-  }
+  };
   return (
     <>
       <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -123,24 +123,32 @@ const MovieCard = ({
                 </div>
               </div>
               {/* Add to watchlist icon starts here  */}
-              <div className="watchlist-icon-container" onClick={handleWatchClick}>
+              <div
+                className="watchlist-icon-container"
+                onClick={handleWatchClick}
+              >
                 <div
                   className="light dark:hidden"
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={
-                    isWatchlist?'Remove from watchlist':'Add to watchlist'
+                    isWatchlist ? "Remove from watchlist" : "Add to watchlist"
                   }
                 >
-                  <box-icon name={isWatchlist?'list-check':'list-plus'} ></box-icon>
+                  <box-icon
+                    name={isWatchlist ? "list-check" : "list-plus"}
+                  ></box-icon>
                 </div>
                 <div
                   className="dark hidden dark:block"
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={
-                    isWatchlist?'Remove from watchlist':'Add to watchlist'
+                    isWatchlist ? "Remove from watchlist" : "Add to watchlist"
                   }
                 >
-                  <box-icon name={isWatchlist?'list-check':'list-plus'} color="#FFFFFF" ></box-icon>
+                  <box-icon
+                    name={isWatchlist ? "list-check" : "list-plus"}
+                    color="#FFFFFF"
+                  ></box-icon>
                 </div>
               </div>
             </div>
@@ -151,6 +159,12 @@ const MovieCard = ({
         isModalOpen={isModalOpen}
         toggleModal={toggleModal}
         movie={movie}
+        favoriteMovies={favoriteMovies}
+        watchlistMovies={watchlistMovies}
+        addToFavorites={addToFavorites}
+        addToWatchlist={addToWatchlist}
+        RemoveFromFavourites={RemoveFromFavourites}
+        removeFromWatchlist={removeFromWatchlist}
       />
     </>
   );

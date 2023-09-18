@@ -7,17 +7,17 @@ import { Route, Routes } from "react-router-dom";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
 import { auth } from "./firebase";
-import { onAuthStateChanged,signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import ForgotPassword from "./Components/ForgotPassword";
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  const logOut=async ()=>{
+  const logOut = async () => {
     try {
       await signOut(auth);
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
   const getAuthMethod = (user) => {
     // Check the providerData to determine the authentication method
     const providerData = user.providerData;
@@ -41,8 +41,8 @@ function App() {
       const uid = user.uid;
       console.log("user is logged in");
       // console.log(user);
-      const authMethod=getAuthMethod(user);
-      if(authMethod==="password" && !user.emailVerified){
+      const authMethod = getAuthMethod(user);
+      if (authMethod === "password" && !user.emailVerified) {
         logOut();
         return;
       }
@@ -77,6 +77,14 @@ function App() {
                 <MovieHome currentUser={currentUser} />
               </>
             }
+          />
+          <Route
+            path="/favourites"
+            element={<MovieHome currentUser={currentUser} />}
+          />
+          <Route
+            path="/watchlist"
+            element={<MovieHome currentUser={currentUser} />}
           />
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />

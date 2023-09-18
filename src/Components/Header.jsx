@@ -19,12 +19,14 @@ import "boxicons";
 // import { auth } from "../firebase";
 const Header = ({ currentUser }) => {
   const [currentUserState, setCurrentUser] = useState(currentUser);
+  // const dropdownRef = useRef(null);
   const logOut = async () => {
     // // console.log("log out is clicked")
     try {
       await signOut(auth);
       // // console.log("Signed out")
       setCurrentUser(null);
+      navigate("/")
       toast.success("User logged out");
     } catch (error) {
       // console.log(error.message);
@@ -34,7 +36,7 @@ const Header = ({ currentUser }) => {
     setCurrentUser(currentUser);
   }, [currentUser]);
   const [colorTheme, setTheme] = useDarkSide();
-  const toggleMode = (checked) => {
+  const toggleMode = () => {
     setTheme(colorTheme);
   };
   // console.log(currentUser);
@@ -61,21 +63,28 @@ const Header = ({ currentUser }) => {
     dispatch(clearLanguage());
     navigate("/");
   };
-  const toggleUserMenu=()=>{
-    document.getElementById("user-dropdown").classList.toggle('hidden');
-  }
+  const toggleUserMenu = () => {
+    console.log("toggle function called");
+    document.getElementById("user-dropdown").classList.toggle("hidden");
+  };
+  // window.onclick=(event)=>{
+  //   const dropMenu=document.getElementById("user-dropdown");
+  //   if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !dropMenu.classList.contains("hidden")) {
+  //     toggleUserMenu();
+  //   }
+  // }
   return (
     <>
       <nav className="bg-gray-100 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
         <ToastContainer theme="colored" />
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="#" className="flex items-center">
-            <img src={ourLogo} className="h-8 mr-3" alt="Flowbite Logo" />
+            <img src="./public/lens-logo.png" className="h-8 mr-3" alt="Flowbite Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Movie Lens
             </span>
           </a>
-          <div className="flex md:order-2 space-x-3">
+          <div className="flex md:order-2 space-x-3 items-center">
             <Tooltip id="my-tooltip" />
             <button onClick={toggleMode}>
               <img
@@ -93,96 +102,90 @@ const Header = ({ currentUser }) => {
                 alt=""
               />
             </button>
-            {currentUserState === null ? (
-              <>
-                <button
-                  type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                >
-                  <Link to="/SignIn">Log In</Link>
-                </button>
-                <button
-                  type="button"
-                  className="text-white hidden lg:block bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                >
-                  <Link to="/SignUp">Register</Link>
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  
-                  id="user-menu-button"
-                  aria-expanded="false"
-                  data-dropdown-placement="bottom"
-                  onClick={toggleUserMenu}
-                >
-                  <span className="sr-only">Open user menu</span>
-                  {/* <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-3.jpg"
-                    alt="user photo"
-                  /> */}
-                  <div className="dark:hidden">
-                  <box-icon name='user-circle' ></box-icon>
-                  </div>
-                  <div className="hidden dark:block">
-                  <box-icon name='user-circle' color="#FFFFFF"></box-icon>
-                  </div>
-                </button>
-                {/* <!-- Dropdown menu --> */}
-                <div
-                  className="z-50 hidden absolute my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                  id="user-dropdown"
-                >
-                  <div className="px-4 py-3">
-                    <span className="block text-sm text-gray-900 dark:text-white">
-                      Bonnie Green
-                    </span>
-                    <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
-                      name@flowbite.com
-                    </span>
-                  </div>
-                  <ul className="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        Dashboard
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        Earnings
-                      </a>
-                    </li>
-                    <li>
-                      <div
-                        
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
-                        onClick={logOut}
-
-                      >
-                        Sign out
-                      </div>
-                    </li>
-                  </ul>
+            {/* {currentUserState === null ? ( */}
+            {/* <> */}
+            <button
+              type="button"
+              className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ${
+                currentUser !== null ? "hidden" : ""
+              }`}
+            >
+              <Link to="/SignIn">Log In</Link>
+            </button>
+            <button
+              type="button"
+              className={`text-white hidden ${
+                currentUser !== null ? "hidden" : "lg:block"
+              } bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"`}
+            >
+              <Link to="/SignUp">Register</Link>
+            </button>
+            {/* </> */}
+            {/* ) : ( */}
+            <div
+              id="user-dropdown-container"
+              className={`${currentUser === null ? "hidden" : ""}`}
+              
+            >
+              <button
+                type="button"
+                id="user-menu-button"
+                aria-expanded="false"
+                data-dropdown-toggle="user-dropdown"
+                data-dropdown-placement="bottom"
+                // onClick={toggleUserMenu}
+              >
+                <span className="sr-only">Open user menu</span>
+                <div className="dark:hidden">
+                  <box-icon name="user-circle"></box-icon>
                 </div>
-              </>
-            )}
+                <div className="hidden dark:block">
+                  <box-icon name="user-circle" color="#FFFFFF"></box-icon>
+                </div>
+              </button>
+              {/* <!-- Dropdown menu --> */}
+              <div
+                className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                id="user-dropdown"
+              >
+                <div className="px-4 py-3">
+                  <span className="block text-sm text-gray-900 dark:text-white">
+                    {currentUser!==null?currentUser.displayName:''}
+                  </span>
+                  <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
+                    {currentUser!==null?currentUser.email:''}
+                  </span>
+                </div>
+                <ul className="py-2" aria-labelledby="user-menu-button">
+                  <li>
+                    <Link
+                      to="/favourites"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Favourites
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/watchlist"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Watchlist
+                    </Link>
+                  </li>
+                  
+                  <li>
+                    <div
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+                      onClick={logOut}
+                    >
+                      Sign out
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            {/* )} */}
 
             <button
               data-collapse-toggle="navbar-sticky"
@@ -216,14 +219,12 @@ const Header = ({ currentUser }) => {
           >
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-gray-100 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
               <li>
-                <a
-                  href="#"
-                  className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                  aria-current="page"
+                <div
+                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer"
                   onClick={popular}
                 >
                   Popular Worldwide
-                </a>
+                </div>
               </li>
               {/* category dropdown starts */}
               <li>
