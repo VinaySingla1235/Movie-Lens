@@ -89,6 +89,7 @@ const SignUp = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
+        toast.success(`Welcome ${user.displayName}`)
         // IdP data available using getAdditionalUserInfo(result)
         // console.log(user)
         navigate("/");

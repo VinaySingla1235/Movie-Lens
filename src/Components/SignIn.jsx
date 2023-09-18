@@ -31,13 +31,13 @@ const SignIn = () => {
             // await setPersistence(auth,browserLocalPersistence);
             const response = await signInWithEmailAndPassword(auth,userCredentials.email,userCredentials.password);
             const user=response.user;
-            console.log(user);
+            // console.log(user);
             setSubmitDisabled(false)
             if(!user.emailVerified){
                 toast.error("Email not verified");
                 return;
             }
-            
+            toast.success(`Welcome ${user.displayName}`)
             navigate("/");
             
         } catch (error) {
@@ -55,6 +55,7 @@ const SignIn = () => {
           const user = result.user;
           // IdP data available using getAdditionalUserInfo(result)
           // console.log(user)
+          toast.success(`Welcome ${user.displayName}`)
           navigate("/");
           // ...
         })

@@ -51,6 +51,7 @@ function App() {
       // User is signed out
       // ...
       console.log("user is signed out");
+      setCurrentUser(user);
     }
   });
 
@@ -64,7 +65,7 @@ function App() {
             element={
               <>
                 <SearchBar />
-                <MovieHome />
+                <MovieHome currentUser={currentUser} />
               </>
             }
           />
@@ -73,7 +74,7 @@ function App() {
             element={
               <>
                 <SearchBar />
-                <MovieHome />
+                <MovieHome currentUser={currentUser} />
               </>
             }
           />

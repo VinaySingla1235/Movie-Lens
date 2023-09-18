@@ -3,8 +3,12 @@ import MovieCard from "./MovieCard";
 import { useSelector } from "react-redux";
 import Spinner from "./Spinnner";
 import Swal from 'sweetalert2'
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
-const MovieHome = () => {
+import { db } from "../firebase";
+import { collection,doc,setDoc,getDoc,addDoc, updateDoc,FieldValue,arrayUnion,arrayRemove} from "firebase/firestore";
+const MovieHome = ({currentUser}) => {
   const location=useLocation();
   // console.log(location)
   const categoryFilter=useSelector((state)=>state.category.categoryFilter)
@@ -13,6 +17,7 @@ const MovieHome = () => {
   const [movies, setMovies] = useState([]);
   const [heading ,setHeading]=useState("");
   const [fetching,setFetching]=useState(false);
+
   const isObjectEmpty=(obj)=> {
     return Object.keys(obj).length === 0;
   }
@@ -79,6 +84,8 @@ const MovieHome = () => {
       fetchPopular()
     }
   }
+
+  
   const fetchFilter=async(url,heading2)=>{
     try {
       const data = await fetch(url);
@@ -123,8 +130,138 @@ const MovieHome = () => {
     }
   }
 
+
+  // database manipultion
+  const movieToAdd = {
+    id: 123456789101111100,
+    title: "Movie Title new one new one new one new one",
+    // Other movie properties
+  };
+
+  const [favoriteMovies,setFavouriteMovies]=useState([]);
+  const [watchlistMovies,setWatchListMovies]=useState([]);
+  useEffect(()=>{
+    if(currentUser!==null){
+      getFavMovies();
+      getWatchlistMovies();
+    }
+    else{
+      setFavouriteMovies([]);
+      setWatchListMovies([]);
+    }
+  },[currentUser])
+
+  //Favourite Movies
+  const getFavMovies=async()=>{
+    try {
+      const docRef=doc(db,"favorites",currentUser.uid);
+      console.log(docRef);
+      const docSnapshot = await getDoc(docRef); 
+      if (docSnapshot.exists()) {
+        // console.log(docSnapshot.data().movies);
+        setFavouriteMovies(docSnapshot.data().movies)
+      } else {
+        // console.log("Document does not exist.");
+        await setDoc(docRef,{
+          movies:[]
+        })
+      }
+
+    } catch (error) {
+      alert(error.message)
+      console.log(error)
+    }
+  }
+  const addToFavorites = async (movie) => {
+    if(currentUser===null){
+      toast.info("You need to login to add to favourites");
+      return;
+    }
+    try {
+      console.log("Adding to favourites")
+      const favRef=doc(db,"favorites",currentUser.uid);
+      console.log(favRef);
+      await updateDoc(favRef, {
+        movies:arrayUnion(movie)
+      });
+      const updatedFavoriteMovies = favoriteMovies.concat(movie);
+      setFavouriteMovies(updatedFavoriteMovies)
+    } catch (error) {
+      console.error("Error adding movie to favorites:", error);
+    }
+  };
+  const RemoveFromFavourites = async (movie) => {
+    try {
+
+      console.log("Adding to favourites")
+      const favRef=doc(db,"favorites",currentUser.uid);
+      console.log(favRef);
+      await updateDoc(favRef, {
+        movies:arrayRemove(movie)
+      });
+      const updatedFavoriteMovies=favoriteMovies.filter((favMovie)=>favMovie.id!==movie.id);
+      setFavouriteMovies(updatedFavoriteMovies);
+    } catch (error) {
+      console.error("Error adding movie to favorites:", error);
+    }
+  };
+  
+  // Watchlist Movies
+  const getWatchlistMovies=async()=>{
+    try {
+      const docRef=doc(db,"watchlist",currentUser.uid);
+      console.log(docRef);
+      const docSnapshot = await getDoc(docRef); 
+      if (docSnapshot.exists()) {
+        // console.log(docSnapshot.data().movies);
+        setWatchListMovies(docSnapshot.data().movies)
+      } else {
+        // console.log("Document does not exist.");
+        await setDoc(docRef,{
+          movies:[]
+        })
+      }
+
+    } catch (error) {
+      alert(error.message)
+      console.log(error)
+    }
+  }
+  const addToWatchlist = async (movie) => {
+    if(currentUser===null){
+      toast.info("You need to login to add to watchlist");
+      return;
+    }
+    try {
+      console.log("Adding to favourites")
+      const favRef=doc(db,"watchlist",currentUser.uid);
+      console.log(favRef);
+      await updateDoc(favRef, {
+        movies:arrayUnion(movie)
+      });
+      const updatedWatchlistMovies = watchlistMovies.concat(movie);
+      setWatchListMovies(updatedWatchlistMovies);
+    } catch (error) {
+      console.error("Error adding movie to favorites:", error);
+    }
+  };
+  const removeFromWatchlist = async (movie) => {
+    try {
+      console.log("Adding to favourites")
+      const favRef=doc(db,"watchlist",currentUser.uid);
+      console.log(favRef);
+      await updateDoc(favRef, {
+        movies:arrayRemove(movie)
+      });
+      const updatedWatchlistMovies=watchlistMovies.filter((favMovie)=>favMovie.id!==movie.id);
+      setWatchListMovies(updatedWatchlistMovies);
+    } catch (error) {
+      console.error("Error adding movie to favorites:", error);
+    }
+  };
+
   return (
-    <>{ fetching?<Spinner/> :
+    <><ToastContainer theme="colored"/> { fetching?<Spinner/> :
       <div className="mt-40 dark:text-white flex flex-col items-center">
         <div>
         <h1 className="text-4xl md:text-6xl text-black font-bold dark:text-white ">
@@ -134,7 +271,12 @@ const MovieHome = () => {
         <div className="px-8">
           <div className="container grid md:grid-cols-2 gap-6 lg:grid-cols-3 xl-grid-cols-4 mt-8">
             {movies.map((movie) => {
-              return <MovieCard key={movie.id} movie={movie} />;
+              return <MovieCard key={movie.id} movie={movie} favoriteMovies={favoriteMovies} 
+              watchlistMovies={watchlistMovies} addToFavorites={addToFavorites} 
+              addToWatchlist={addToWatchlist} RemoveFromFavourites={RemoveFromFavourites}
+              removeFromWatchlist={removeFromWatchlist}
+              
+              />;
             })}
           </div>
         </div>
