@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import moon from "../assets/moon-solid.svg";
 import sun from "../assets/white-sun.svg";
 import useDarkSide from "./useDarkSide";
+import 'flowbite';
 import ourLogo from "../assets/magnifyingLens.png";
 import { useDispatch } from "react-redux";
 import { addCategory, clearCategory } from "../Features/categoryFilterReducer";
