@@ -134,6 +134,7 @@ const Header = ({ currentUser }) => {
                 aria-expanded="false"
                 data-dropdown-toggle="user-dropdown"
                 data-dropdown-placement="bottom"
+                onTouchStart={()=>{document.getElementById('user-menu-dropdown').click()}}
                 // onClick={toggleUserMenu}
               >
                 <span className="sr-only">Open user menu</span>
@@ -192,7 +193,7 @@ const Header = ({ currentUser }) => {
               data-collapse-toggle="navbar-sticky"
               id="mobile-navbar-toggle"
               type="button"
-              className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 cursor-pointer"
               aria-controls="navbar-sticky"
               aria-expanded="false"
             >
