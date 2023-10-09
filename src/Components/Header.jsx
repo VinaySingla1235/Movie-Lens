@@ -3,7 +3,7 @@ import moon from "../assets/moon-solid.svg";
 import sun from "../assets/white-sun.svg";
 import useDarkSide from "./useDarkSide";
 import 'flowbite';
-import ourLogo from "../assets/magnifyingLens.png";
+import ourLogo from "../assets/lens-logo.png"
 import { useDispatch } from "react-redux";
 import { addCategory, clearCategory } from "../Features/categoryFilterReducer";
 import { addLanguage, clearLanguage } from "../Features/languageFilterReducer";
@@ -80,7 +80,7 @@ const Header = ({ currentUser }) => {
         <ToastContainer theme="colored" />
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="#" className="flex items-center">
-            <img src="./public/lens-logo.png" className="h-8 mr-3" alt="Flowbite Logo" />
+            <img src={ourLogo} className="h-8 mr-3" alt="Movie Lens" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Movie Lens
             </span>
