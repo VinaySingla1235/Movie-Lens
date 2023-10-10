@@ -82,17 +82,21 @@ const firebaseConfig = {
   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
   appId: "YOUR_APP_ID"
 };
-
+```
 ### 5. Start the development server
 npm run dev
 
 ## Acknowledgments
-
 We would like to express our gratitude to the following individuals and organizations for their contributions and support:
 - TMDb for providing the movie data API.
 - Youtube for providing the trailer of movies
 - Firebase for enabling user authentication and data management.
 
+##License
+This project is licensed under the MIT License.
+
+##Contact
+If you have any questions or feedback, please feel free to contact us at vinaysingla7896@gmail.com
 
 
 
