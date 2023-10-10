@@ -72,7 +72,7 @@ To set up Firebase, follow these steps:
 
 4. Copy the Firebase config object.
 
-5. In the project's `src/firebase.js` file, replace the Firebase configuration object with your own. Make sure it looks like this:
+5. In the project's `firebase.js` file, replace the Firebase configuration object with your own. Make sure it looks like this:
 ```javascript
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
