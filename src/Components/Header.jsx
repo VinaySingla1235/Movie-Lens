@@ -64,16 +64,76 @@ const Header = ({ currentUser }) => {
     dispatch(clearLanguage());
     navigate("/");
   };
-  const toggleUserMenu = () => {
-    console.log("toggle function called");
+
+  const handleDocumentClick=()=>{
+    const categoryDropdown=document.getElementById('categoryDropdownNavbar');
+    if(!categoryDropdown.classList.contains('hidden')){
+      categoryDropdown.classList.add('hidden');
+    }
+    const languageDropdown=document.getElementById('languageDropdownNavbar');
+    if(!languageDropdown.classList.contains('hidden')){
+      languageDropdown.classList.add('hidden');
+    }
+    const userDropdown=document.getElementById('user-dropdown');
+    if(!userDropdown.classList.contains('hidden')){
+      userDropdown.classList.add('hidden');
+    }
+  }
+  const toggleUserMenu = (e) => {
+    e.stopPropagation();
+    const categoryDropdown=document.getElementById('categoryDropdownNavbar');
+    if(!categoryDropdown.classList.contains('hidden')){
+      categoryDropdown.classList.add('hidden');
+    }
+    const languageDropdown=document.getElementById('languageDropdownNavbar');
+    if(!languageDropdown.classList.contains('hidden')){
+      languageDropdown.classList.add('hidden');
+    }
+    // console.log("toggle function called");
     document.getElementById("user-dropdown").classList.toggle("hidden");
   };
-  // window.onclick=(event)=>{
-  //   const dropMenu=document.getElementById("user-dropdown");
-  //   if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !dropMenu.classList.contains("hidden")) {
-  //     toggleUserMenu();
-  //   }
-  // }
+  
+  const toggleNavbar=(e)=>{
+    
+    const mobileNavbar = document.getElementById('navbar-sticky');
+    // console.log(mobileNavbar);
+    mobileNavbar.classList.toggle('hidden');
+  }
+  const toggleCategories=(e)=>{
+    e.stopPropagation();
+    const languageDropdown=document.getElementById('languageDropdownNavbar');
+    if(!languageDropdown.classList.contains('hidden')){
+      languageDropdown.classList.add('hidden');
+    }
+    const userDropdown=document.getElementById('user-dropdown');
+    if(!userDropdown.classList.contains('hidden')){
+      userDropdown.classList.add('hidden');
+    } 
+    document.getElementById('categoryDropdownNavbar').classList.toggle('hidden');
+  }
+  const toggleLanguages=(e)=>{
+    e.stopPropagation();
+    const userDropdown=document.getElementById('user-dropdown');
+    if(!userDropdown.classList.contains('hidden')){
+      userDropdown.classList.add('hidden');
+    } 
+    const categoryDropdown=document.getElementById('categoryDropdownNavbar');
+    if(!categoryDropdown.classList.contains('hidden')){
+      categoryDropdown.classList.add('hidden');
+    }
+    document.getElementById('languageDropdownNavbar').classList.toggle('hidden');
+  }
+
+  useEffect(() => {
+    // Add a click event listener to the document
+    document.addEventListener('click', handleDocumentClick);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  },[]);
+  
   return (
     <>
       <nav className="bg-gray-100 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
@@ -132,10 +192,10 @@ const Header = ({ currentUser }) => {
                 type="button"
                 id="user-menu-button"
                 aria-expanded="false"
-                data-dropdown-toggle="user-dropdown"
-                data-dropdown-placement="bottom"
-                onTouchStart={()=>{document.getElementById('user-menu-dropdown').click()}}
-                // onClick={toggleUserMenu}
+                // data-dropdown-toggle="user-dropdown"
+                // data-dropdown-placement="bottom"
+                
+                onClick={toggleUserMenu}
               >
                 <span className="sr-only">Open user menu</span>
                 <div className="dark:hidden">
@@ -147,8 +207,9 @@ const Header = ({ currentUser }) => {
               </button>
               {/* <!-- Dropdown menu --> */}
               <div
-                className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                className="z-50 hidden my-4 absolute right-4 top-8 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
                 id="user-dropdown"
+                onClick={(e) => e.stopPropagation()}
               >
                 <div className="px-4 py-3">
                   <span className="block text-sm text-gray-900 dark:text-white">
@@ -190,12 +251,13 @@ const Header = ({ currentUser }) => {
             {/* )} */}
 
             <button
-              data-collapse-toggle="navbar-sticky"
+              // data-collapse-toggle="navbar-sticky"
               id="mobile-navbar-toggle"
               type="button"
               className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 cursor-pointer"
-              aria-controls="navbar-sticky"
-              aria-expanded="false"
+              onClick={toggleNavbar}
+              // aria-controls="navbar-sticky"
+              // aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
               <svg
@@ -232,8 +294,9 @@ const Header = ({ currentUser }) => {
               <li>
                 <button
                   id="categoryDropdownNavbarLink"
-                  data-dropdown-toggle="categoryDropdownNavbar"
+                  // data-dropdown-toggle="categoryDropdownNavbar"
                   className="flex items-center justify-between w-full py-2 pl-3 pr-4  text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+                  onClick={toggleCategories}
                 >
                   Categories
                   <svg
@@ -255,7 +318,7 @@ const Header = ({ currentUser }) => {
                 {/* <!-- Dropdown menu --> */}
                 <div
                   id="categoryDropdownNavbar"
-                  className="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                  className="z-10 absolute hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
                 >
                   <ul
                     className="py-2 text-sm text-gray-700 dark:text-gray-400"
@@ -282,8 +345,9 @@ const Header = ({ currentUser }) => {
               <li>
                 <button
                   id="languageDropdownNavbarLink"
-                  data-dropdown-toggle="languageDropdownNavbar"
+                  // data-dropdown-toggle="languageDropdownNavbar"
                   className="flex items-center justify-between w-full py-2 pl-3 pr-4  text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+                  onClick={toggleLanguages}
                 >
                   Original Language
                   <svg
@@ -305,7 +369,7 @@ const Header = ({ currentUser }) => {
                 {/* <!-- Dropdown menu --> */}
                 <div
                   id="languageDropdownNavbar"
-                  className="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                  className="z-10 hidden absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
                 >
                   <ul
                     className="py-2 text-sm text-gray-700 dark:text-gray-400"

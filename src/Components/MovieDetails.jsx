@@ -18,7 +18,6 @@ const MovieDetails = ({
   const youtubeApiKey =import.meta.env.VITE_YOUTUBE_API_KEY
   // console.log(youtubeApiKey)
   const [language, setLanguage] = useState("");
-
   const validGenres = genres.filter((genre) =>
     movie.genre_ids.includes(genre.id)
   );
@@ -79,6 +78,7 @@ const MovieDetails = ({
       addToWatchlist(movie);
     }
   };
+  
   return (
     <div
       id="defaultModal"
@@ -96,9 +96,9 @@ const MovieDetails = ({
           {/* <!-- Modal header --> */}
           <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <div className="flex space-x-2 items-center">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h className="text-xl font-semibold text-gray-900 dark:text-white">
                 {movie.title}
-              </h3>
+              </h>
               <div className="icons-container flex space-x-2">
                 <Tooltip id="my-tooltip" />
                 {/* add to favourite icon container starts here */}
