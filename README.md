@@ -1,6 +1,6 @@
 # Movie Lens
 
-Welcome to the Movie Explorer Web Application! This project is designed to provide users with an engaging and intuitive platform to discover and explore their favorite movies. The application leverages the power of the TMDb (The Movie Database) API to fetch movie data, allowing users to filter, search, and explore a vast collection of films. Additionally, it offers interactive features such as dynamic movie cards, YouTube trailer integration, and user account management via Firebase.
+Welcome to the MovieLens This project is designed to provide users with an engaging and intuitive platform to discover and explore their favorite movies. The application leverages the power of the TMDb (The Movie Database) API to fetch movie data, allowing users to filter, search, and explore a vast collection of films. Additionally, it offers interactive features such as dynamic movie cards, YouTube trailer integration, and user account management via Firebase.
 
 ## Features
 
