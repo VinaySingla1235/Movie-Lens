@@ -28,10 +28,6 @@ To get started with the Movie Explorer Web Application, follow these steps:
 
 - Install project dependencies using npm:
 
-
-### 2. Install Dependencies
-- Install project dependencies using npm:
-
 ### 3. Set Up API Keys
 
 Before you can use the application, you need to set up your API keys.
