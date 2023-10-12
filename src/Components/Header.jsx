@@ -139,12 +139,12 @@ const Header = ({ currentUser }) => {
       <nav className="bg-gray-100 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
         <ToastContainer theme="colored" />
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a href="#" className="flex items-center">
-            <img src={ourLogo} className="h-8 mr-3" alt="Movie Lens" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <div href="#" className="flex items-center">
+            <img src={ourLogo} onClick={popular} className="h-8 mr-3 cursor-pointer" alt="Movie Lens" />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white cursor-pointer" onClick={popular}>
               Movie Lens
             </span>
-          </a>
+          </div>
           <div className="flex md:order-2 space-x-3 items-center">
             <Tooltip id="my-tooltip" />
             <button onClick={toggleMode}>

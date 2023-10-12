@@ -177,33 +177,38 @@ const MovieHome = ({currentUser}) => {
       toast.info("You need to login to add to favourites");
       return;
     }
+
     try {
+      const updatedFavoriteMovies = favoriteMovies.concat(movie);
+      setFavouriteMovies(updatedFavoriteMovies)
       // console.log("Adding to favourites")
       const favRef=doc(db,"favorites",currentUser.uid);
       // console.log(favRef);
-      // await updateDoc(favRef, {
-      //   movies:arrayUnion(movie)
-      // });
       await setDoc(favRef,{[movie.id]:movie},{merge:true});
-      const updatedFavoriteMovies = favoriteMovies.concat(movie);
-      setFavouriteMovies(updatedFavoriteMovies)
+      console.log("added to favourites");
     } catch (error) {
-      toast.error("Error adding movie to favorites:", error);
+      console.log(error);
+      // toast.error("Error adding movie to favorites:", error);
+      const updatedFavoriteMovies=favoriteMovies.filter((favMovie)=>favMovie.id!==movie.id);
+      setFavouriteMovies(updatedFavoriteMovies);
     }
   };
   const RemoveFromFavourites = async (movie) => {
     try {
-
+      const updatedFavoriteMovies=favoriteMovies.filter((favMovie)=>favMovie.id!==movie.id);
+      setFavouriteMovies(updatedFavoriteMovies);
       // console.log("Adding to favourites")
       const favRef=doc(db,"favorites",currentUser.uid);
       // console.log(favRef);
       await updateDoc(favRef, {
         [movie.id]:deleteField()
       });
-      const updatedFavoriteMovies=favoriteMovies.filter((favMovie)=>favMovie.id!==movie.id);
-      setFavouriteMovies(updatedFavoriteMovies);
+      
     } catch (error) {
-      toast.error("Error adding movie to favorites:", error);
+      // toast.error("Error adding movie to favorites:", error);
+      console.log(error);
+      const updatedFavoriteMovies = favoriteMovies.concat(movie);
+      setFavouriteMovies(updatedFavoriteMovies)
     }
   };
   
@@ -239,30 +244,33 @@ const MovieHome = ({currentUser}) => {
     }
     try {
       // console.log("Adding to favourites")
-      const watchRef=doc(db,"watchlist",currentUser.uid);
-      // console.log(watchRef);
-      // await updateDoc(favRef, {
-      //   movies:arrayUnion(movie)
-      // });
-      await setDoc(watchRef,{[movie.id]:movie},{merge:true});
       const updatedWatchlistMovies = watchlistMovies.concat(movie);
       setWatchListMovies(updatedWatchlistMovies);
+      const watchRef=doc(db,"watchlist",currentUser.uid);
+      await setDoc(watchRef,{[movie.id]:movie},{merge:true});
+      
     } catch (error) {
-      toast.error("Error adding movie to favorites:", error);
+      console.log(error);
+      // toast.error("Error adding movie to favorites:", error);
+      const updatedWatchlistMovies=watchlistMovies.filter((favMovie)=>favMovie.id!==movie.id);
+      setWatchListMovies(updatedWatchlistMovies);
     }
   };
   const removeFromWatchlist = async (movie) => {
     try {
       // console.log("Adding to favourites")
+      const updatedWatchlistMovies=watchlistMovies.filter((favMovie)=>favMovie.id!==movie.id);
+      setWatchListMovies(updatedWatchlistMovies);
       const favRef=doc(db,"watchlist",currentUser.uid);
       // console.log(favRef);
       await updateDoc(favRef, {
         [movie.id]:deleteField()
       });
-      const updatedWatchlistMovies=watchlistMovies.filter((favMovie)=>favMovie.id!==movie.id);
-      setWatchListMovies(updatedWatchlistMovies);
+      
     } catch (error) {
-      toast.error("Error adding movie to favorites:", error);
+      // toast.error("Error adding movie to favorites:", error);
+      const updatedWatchlistMovies = watchlistMovies.concat(movie);
+      setWatchListMovies(updatedWatchlistMovies);
     }
   };
   useEffect(()=>{

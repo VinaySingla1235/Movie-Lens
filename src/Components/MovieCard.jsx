@@ -95,7 +95,7 @@ const MovieCard = ({
             <div className="icons-container flex space-x-2">
               <Tooltip id="my-tooltip" />
               {/* add to favourite icon container starts here */}
-              <div className="fav-icon-container" onClick={handleFavClick}>
+              <div className="fav-icon-container cursor-pointer" onClick={handleFavClick}>
                 <div
                   className="light dark:hidden"
                   data-tooltip-id="my-tooltip"
@@ -124,7 +124,7 @@ const MovieCard = ({
               </div>
               {/* Add to watchlist icon starts here  */}
               <div
-                className="watchlist-icon-container"
+                className="watchlist-icon-container cursor-pointer"
                 onClick={handleWatchClick}
               >
                 <div
