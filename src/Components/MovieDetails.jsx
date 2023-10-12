@@ -213,6 +213,10 @@ const MovieDetails = ({
                   <span className="font-bold">Original Language : </span>
                   <span className="font-light">{language}</span>
                 </p>
+                <p className="inline-block my-2 ml-8">
+                  <span className="font-bold">Rating : </span>
+                  <span className="font-light">{movie.vote_average}</span>
+                </p>
               </div>
               <div className="categories flex justify-start space-x-3 my-1">
                 {validGenres.map((genre, index) => {
