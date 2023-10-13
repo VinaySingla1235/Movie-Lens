@@ -93,7 +93,11 @@ const MovieCard = ({
               </a>
             </div>
             <div className="icons-container flex space-x-2">
-              <Tooltip id="my-tooltip" />
+            {('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) ? (
+        <></>
+      ) : (
+        <Tooltip id="my-tooltip" />
+      )}
               {/* add to favourite icon container starts here */}
               <div className="fav-icon-container cursor-pointer" onClick={handleFavClick}>
                 <div

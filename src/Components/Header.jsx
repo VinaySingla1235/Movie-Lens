@@ -146,7 +146,13 @@ const Header = ({ currentUser }) => {
             </span>
           </div>
           <div className="flex md:order-2 space-x-3 items-center">
-            <Tooltip id="my-tooltip" />
+          
+          {('maxTouchPoints' in navigator && navigator.maxTouchPoints > 0) ? (
+        <></>
+      ) : (
+        <Tooltip id="my-tooltip" />
+      )}
+      
             <button onClick={toggleMode}>
               <img
                 className={`h-6 w-6 ${colorTheme === "light" ? "hidden" : ""}`}
